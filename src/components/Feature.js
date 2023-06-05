@@ -30,7 +30,26 @@ import { fetchQueryResultsFromTermAndValue } from '../api';
  *  - call setIsLoading, set it to false
  */
 const Searchable = (props) => {
+    const {searchTerm, searchValue, setIsLoading, setSearchResults} = props
   
+    return <span className='content'>
+        <a href='#' onClick={async (event) => {
+            event.preventDefault()
+            setIsLoading(true)
+            try{
+                const response = await fetchQueryResultsFromTermAndValue({
+                    searchTerm, searchValue});
+                const results= response.json()
+                setSearchResults(results)
+            }catch{
+                console.error(error)
+            }finally{
+                setIsLoading(false)
+            }
+        }}> {searchTerm}
+            {searchValue}
+            </a>
+    </span>
 }
 
 /**
@@ -67,8 +86,155 @@ const Searchable = (props) => {
  * 
  * This component should be exported as default.
  */
+
+
+
 const Feature = (props) => {
 
+const { featuredResult } = props 
+
+if(featuredResult){
+
+const {
+    title,
+    dated,
+    images,
+    primaryimageurl,
+    description,
+    culture,
+    style,
+    technique,
+    medium,
+    dimensions,
+    people,
+    department,
+    division,
+    contact,
+    creditline
+} = featuredResult 
+
+return <main id="feature">
+   <div className="object-feature">
+     <header>
+       <h3>{title}</h3>
+       <h4>{dated}</h4>
+     </header>
+     <section className="facts"> 
+        
+        {
+            description ?
+            <Fragment>
+                <span className="title">Description</span>
+                <span className="content">{description}</span>
+            </Fragment> 
+            : null
+        }   
+      
+        {
+            culture ?
+            <Fragment>
+                <span className="title">Culture</span>
+                <span className="content">{culture}</span>
+            </Fragment>
+            : null
+       }
+       
+        {
+            style ?
+            <Fragment>
+                <span className="title">Style</span>
+                <span className="content">{style}</span>
+            </Fragment>
+            : null
+       }
+      
+        {
+            technique ?
+            <Fragment>
+                <span className="title">Technique</span>
+                <span className="content">{technique}</span>
+            </Fragment>
+            : null
+       }
+       
+        {
+            medium ?
+            <Fragment>
+                <span className="title">Medium</span>
+                <span className="content">{medium}</span>
+            </Fragment>
+            : null
+        }
+
+        {
+            dimensions ?
+            <Fragment>
+                <span className="title">Dimensions</span>
+                <span className="content">{dimensions}</span>
+            </Fragment>
+            : null
+       }
+       
+        {
+            people ?
+            people.map((person, index)=>
+            <Fragment key={index}>
+                <span className="title">People</span>
+                <Searchable  searchValue={person.displayname}  />
+            </Fragment>
+            ) : null
+       }
+       
+        {
+            department ?
+            <Fragment>
+                <span className="title">Department</span>
+                <span className="content">{department}</span>
+            </Fragment>
+            : null
+       }
+       
+        {
+            division ?
+            <Fragment>
+                <span className="title">Division</span>
+                <span className="content">{division}</span>
+            </Fragment>
+            : null
+       }
+       
+        {
+            contact ?
+            <Fragment>
+                <span className="title">Contact</span>
+                <span className="content">{contact}</span>
+            </Fragment>
+            : null
+       }
+    
+        {
+            creditline ?
+            <Fragment>
+                <span className="title">Creditline</span>
+                <span className="content">{creditline}</span>
+            </Fragment>
+            : null
+       }
+       
+     </section>
+      <section className="photos">
+        {images.map((image, index) =>{
+            return <img key={index} src={primaryimageurl} alt={image.description} />
+        })}
+    </section>  
+        
+    </div>
+    </main>
+}else{
+return <main id='feature'></main>;}
 }
 
+
+
+         
 export default Feature;
